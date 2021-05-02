@@ -5,6 +5,14 @@
 #include <math.h>
 #include <time.h>
 #include <iostream>
+
+#include "SOIL.h"
+
+#define TEXTURE_COUNT 1
+static unsigned int texture[TEXTURE_COUNT];
+
+GLuint tex;
+
 using namespace std;
 
 GLfloat x = 2.0f;
@@ -34,7 +42,29 @@ GLfloat camZ = 0.0f;
 GLUquadricObj* qobj;   //For circle
 
 
+void setMaterials() {
+    GLfloat mat_dif[] = { 0.7f, 0.5f, 0.1f, 1.0f };
+    GLfloat mat_amb[] = { 0.3f, 0.2f, 0.3f, 1.0f };
+    GLfloat mat_spec[] = { 0.9f, 0.9f, 0.8f, 1.0f };
+    GLfloat shine[] = { 27.897f };
 
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_dif);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_amb);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_spec);
+    glMaterialfv(GL_FRONT, GL_SHININESS, shine);
+}
+void loadTextures() {
+    int width, height;
+    unsigned char* image;
+
+    image = SOIL_load_image("road.png", &width, &height, 0, SOIL_LOAD_RGB);
+
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+}
 
 void initLights() {
     // Lighting setup
@@ -109,9 +139,9 @@ void keyboard(unsigned char key, int x, int y) {
     if (key == 's')
         camY -= 0.5;
     if (key == 'a')
-        camX += 0.5f;
+        camX += 1.5f;
     if (key == 'd')
-        camX -= 0.5;
+        camX -= 1.5;
     if (key == '1')
         glEnable(GL_LIGHT0);
     if (key == '!')
@@ -275,55 +305,79 @@ void drawBridgeRoad() {
     // glTranslatef(0.0, 1.6, 0.0);
             // BACK
     glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
     glColor3f(1, 1, 1);
+    glTexCoord2f(0.0, 0.0);
     glVertex3f(x, y, z);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(x, -y + 3, z);
+    glTexCoord2f(1.0, 1.0);
     glVertex3f(-x, -y + 3, z);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(-x, y, z);
     glEnd();
 
     // FRONT
     glBegin(GL_QUADS);
-    glColor3f(1, 0, 0);
+    glTexCoord2f(0.0, 0.0);
+    glColor3f(1, 1, 1);
     glVertex3f(x, y, -z);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(-x, y, -z);
+    glTexCoord2f(1.0, 1.0);
     glVertex3f(-x, -y + 3, -z);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(x, -y + 3, -z);
     glEnd();
 
     // LEFT
     glBegin(GL_QUADS);
-    glColor3f(0, 0, 1);
+    glColor3f(1, 1, 1);
     glVertex3f(-x, -y + 3, -z);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(-x, y, -z);
+    glTexCoord2f(1.0, 1.0);
     glVertex3f(-x, y, z*11);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(-x, -y + 3, z * 11);
     glEnd();
 
     //Right
     glBegin(GL_QUADS);
-    glColor3f(1, 1, 0.5);
+    glColor3f(1, 1, 1);
+    glTexCoord2f(0.0, 0.0);
     glVertex3f(x, y, z * 11);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(x, -y + 3, z * 11);
+    glTexCoord2f(1.0, 1.0);
     glVertex3f(x, -y + 3, -z);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(x, y, -z);
     glEnd();
 
     //Top
     glBegin(GL_QUADS);
-    glColor3f(0.6, 0.0, 0.0);
+    glColor3f(1, 1, 1);
+    glTexCoord2f(0.0, 0.0);
     glVertex3f(x, y, -z);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(x, y, z * 11);
+    glTexCoord2f(1.0, 1.0);
     glVertex3f(-x, y, z * 11);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(-x, y, -z);
     glEnd();
 
     //Bottom
     glBegin(GL_QUADS);
-    glColor3f(0.4, 0.0, 0.4);
+    glColor3f(1,1,1);
+    glTexCoord2f(0.0, 0.0);
     glVertex3f(x, -y + 3, z * 11);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(x, -y + 3, -z);
+    glTexCoord2f(1.0, 1.0);
     glVertex3f(-x, -y + 3, -z);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(-x, -y + 3, z * 11);
     glEnd();
 }
@@ -331,12 +385,15 @@ void drawBridgeRoad() {
 void drawCylinder(GLdouble base, GLdouble top, GLdouble height, GLdouble slices, GLdouble stacks) {
     glPushMatrix();
     glRotatef(-90, 1.0f, 0.0f, 0.0f);
+    glColor3f(1, 1, 1);
+    glTexCoord2f(0.0, 0.0);
+    glTexCoord2f(1.0, 0.0);
+    glTexCoord2f(1.0, 1.0);
+    glTexCoord2f(0.0, 1.0);
     gluCylinder(qobj, base, top, height, slices, stacks);
     glPopMatrix();
 
 }
-
-
 
 void changeSize(GLsizei w, GLsizei h) {
     glViewport(0, 0, w, h);
@@ -355,6 +412,41 @@ void changeSize(GLsizei w, GLsizei h) {
 
 }
 
+void drawRailings() {
+    glPushMatrix();
+    glTranslatef(12, 20, 0);
+    glRotatef(90, 0.0f, 1.0f, 0.0f);
+    glColor3f(0.0f, 0.5f, 0.5f);
+    gluCylinder(qobj, 0.5f, 0.5f, 10, 4, 1);
+    glPopMatrix();
+
+    for (int i = 0; i < 12; i= i+2)
+    {
+        glPushMatrix();
+        glTranslatef(22 - i, 18, 0);
+        glRotatef(90, 0.0f, 0.0f, 1.0f);
+        glRotatef(90, 0.0f, 1.0f, 0.0f);
+        glColor3f(0.0f, 0.5f, 0.5f);
+        gluCylinder(qobj, 0.2f, 0.2f, 2, 50, 1);
+        glPopMatrix();
+    }
+   
+}
+
+void rails() {
+    glPushMatrix();
+    glTranslatef(10, 0, 0);
+    drawRailings();
+    glPopMatrix();
+
+    for (int i = 10; i < 100; i++)
+    {
+        glPushMatrix();
+        glTranslatef(i + 10, 0, 0);
+        drawRailings();
+        glPopMatrix();
+    }
+}
 
 void drawBridgePoles() {
     glPushMatrix();
@@ -377,27 +469,36 @@ void drawBridgePoles() {
 
 void roadSeg() {
     glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
     glTranslatef(30, 18, 0);
     glScalef(5.5f, 0.5f, 1);
+    glBindTexture(GL_TEXTURE_2D, tex);
     drawBridgeRoad();
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
     for (int i = 0; i < 100; i++)
     {
 
         glPushMatrix();
+        glEnable(GL_TEXTURE_2D);
         glTranslatef(i + 6, 18 - (i * 0.01f), 0);
         glScalef(5.5f, 0.5f, 1);
+        glBindTexture(GL_TEXTURE_2D, tex);
         drawBridgeRoad();
+        glDisable(GL_TEXTURE_2D);
         glPopMatrix();
     }
 }
 
 void road() {
     glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
     glTranslatef(0, 18, 0);
     glScalef(5.5f, 0.5f, 1);
+    glBindTexture(GL_TEXTURE_2D, tex);
     drawBridgeRoad();
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
     glPushMatrix();
@@ -419,6 +520,60 @@ void road() {
     glPopMatrix();
 }
 
+void rails2() {
+    //Rails-----------------------------------------------------------------------------
+
+    glPushMatrix();
+    glTranslatef(20, 0, 20);
+    glRotatef(-2.55, 0.0f, 0.0f, 1.0f);
+    rails();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(20, 0, 0);
+    glRotatef(-2.55, 0.0f, 0.0f, 1.0f);
+    rails();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(125, -4.25, 20);
+    glRotatef(-3.7, 0.0f, 0.0f, 1.0f);
+    rails();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(125, -4.25, 0);
+    glRotatef(-3.7, 0.0f, 0.0f, 1.0f);
+    rails();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(175, -7.28, 20);
+    glRotatef(-3.7, 0.0f, 0.0f, 1.0f);
+    rails();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(175, -7.28, 0);
+    glRotatef(-3.7, 0.0f, 0.0f, 1.0f);
+    rails();
+    glPopMatrix();
+}
+
+void allRails() {
+    glPushMatrix();
+    rails2();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(00, 0, 20);
+    glRotatef(180, 0.0f, 1.0f, 0.0f);
+    rails2();
+    glPopMatrix();
+
+
+}
+
 void bridge() {
     glPushMatrix();
     glTranslatef(10.75f, 2, 0);
@@ -434,23 +589,34 @@ void bridge() {
     drawCube();
     glPopMatrix();
 
+
+    //Poles of the bridge---------------------------------------------------------------
+    
     glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
     glTranslatef(-300, 0, 0);
+    glBindTexture(GL_TEXTURE_2D, tex);
     drawBridgePoles();
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
     glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
     glRotatef(180, 0.0f, 1.0f, 0.0f);
     glTranslatef(-300, 0, -20);
+    glBindTexture(GL_TEXTURE_2D, tex);
     drawBridgePoles();
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
+    //bridge cube used------------------------------------------------------------
     glPushMatrix();
     glTranslatef(0, 18.2f, 0);
     glScalef(5.5f, 0.5f, 1);
     drawBridgeRoad();
     glPopMatrix();
 
+    // road segments together-----------------------------------------------------------
     glPushMatrix();
     road();
     glPopMatrix();
@@ -460,12 +626,21 @@ void bridge() {
     glRotatef(180, 0.0f, 1.0f, 0.0f);
     road();
     glPopMatrix();
+
+    glPushMatrix();
+    allRails();
+    glPopMatrix();
+
+
+    
 }
 
 void makeCylinder(float height, float base) {
     GLUquadric* obj = gluNewQuadric();
     //gluQuadricDrawStyle(obj, GLU_LINE);
-    glColor3f(0.64f, 0.16, 0.16f); glPushMatrix();
+
+    glColor3f(0.0f, 0.76, 0.0f); 
+    glPushMatrix();
     glRotatef(-90, 1.0, 0.0, 0.0);
     gluCylinder(obj, base, base - (0.2 * base), height, 20, 20);
     glPopMatrix();
@@ -474,7 +649,10 @@ void makeCylinder(float height, float base) {
 
 void makeTree(GLfloat height, GLfloat base) {
     float angle;
-    makeCylinder(height, base); glTranslatef(0.0, height, 0.0);
+
+    glTranslatef(0.0, height, 0.0);
+    makeCylinder(height, base); 
+
     height -= height * .2; base -= base * 0.3;
     for (int a = 0; a < 3; a++) {
         angle = rand() % 50 + 20;
@@ -493,7 +671,7 @@ void makeTree(GLfloat height, GLfloat base) {
 
 void tree() {
     glPushMatrix();
-    glTranslatef(0, 0, 50);
+    glTranslatef(0, 0, 50); 
     glCallList(makeaTree);
     glPopMatrix();
 
@@ -506,10 +684,10 @@ void tree() {
 }
 
 void trees() {
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 10; i++)
     {
         glPushMatrix();
-        glTranslatef(i*10, 0, 0);
+        glTranslatef(i*20, 0, 0);
         tree();
         glPopMatrix();
     }
@@ -566,6 +744,31 @@ void oldRoads() {
     glPopMatrix();
 }
 
+void environment() {
+    glPushMatrix();
+    glTranslatef(20, 0, 10);
+    trees();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(20, 0, -80);
+    trees();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-20, 0, 20);
+    glRotatef(180, 0.0f, 1.0f, 0.0f);
+    trees();
+    glPopMatrix();
+
+    glPushMatrix();
+    glRotatef(180, 0.0f, 1.0f, 0.0f);
+    glTranslatef(30, 0, -110);
+    trees();
+    glPopMatrix();
+
+}
+
 void display() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -577,29 +780,20 @@ void display() {
     glRotatef(rotX, 1.0f, 0.0f, 0.0f);
     glRotatef(rotY, 0.0f, 1.0f, 0.0f);
     glRotatef(rotZ, 0.0f, 0.0f, 1.0f);
-
+    
+    glPushMatrix();
     bridge();
-
+    glPopMatrix();
 
     glPushMatrix();
     oldRoads();
     glPopMatrix();
 
-
     glPushMatrix();
-    glTranslatef(0, 0,10);
-    trees();
+    environment();
     glPopMatrix();
 
-    glPushMatrix();
-    glTranslatef(0, 0, -60);
-    trees();
-    glPopMatrix();
-
-
-   
-
-
+ 
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
     DrawGrid();
@@ -626,6 +820,9 @@ void init() {
     glNewList(makeaTree, GL_COMPILE);
     makeTree(4, 0.2f);
     glEndList();
+
+    loadTextures();
+    setMaterials();
     //glEnable(GL_LIGHTING);
     //glShadeModel(GL_SMOOTH);
     //glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
