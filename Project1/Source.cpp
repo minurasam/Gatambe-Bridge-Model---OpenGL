@@ -166,7 +166,7 @@ GLfloat animateRotation = 0.0f;
 void Timer(int x) {
     animateRotation += animateRotation >= 360.0 ? -animateRotation : 5;
     poss += poss >= 39 ? -poss : 0.3;
-    possNut += possNut >= 39 ? -possNut : 0.2;
+    possNut += possNut >= 49 ? -possNut : 0.2;
     glutPostRedisplay();
 
     glutTimerFunc(60, Timer, 1);
@@ -341,7 +341,7 @@ void drawBridgeRoad() {
     glTexCoord2f(1.0, 0.0);
     glVertex3f(-x, y, -z);
     glTexCoord2f(1.0, 1.0);
-    glVertex3f(-x, y, z*11);
+    glVertex3f(-x, y, z * 11);
     glTexCoord2f(0.0, 1.0);
     glVertex3f(-x, -y + 3, z * 11);
     glEnd();
@@ -374,7 +374,7 @@ void drawBridgeRoad() {
 
     //Bottom
     glBegin(GL_QUADS);
-    glColor3f(1,1,1);
+    glColor3f(1, 1, 1);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(x, -y + 3, z * 11);
     glTexCoord2f(1.0, 0.0);
@@ -424,7 +424,7 @@ void drawRailings() {
     gluCylinder(qobj, 0.5f, 0.5f, 10, 4, 1);
     glPopMatrix();
 
-    for (int i = 0; i < 12; i= i+2)
+    for (int i = 0; i < 12; i = i + 2)
     {
         glPushMatrix();
         glTranslatef(22 - i, 18, 0);
@@ -434,7 +434,7 @@ void drawRailings() {
         gluCylinder(qobj, 0.2f, 0.2f, 2, 50, 1);
         glPopMatrix();
     }
-   
+
 }
 
 void rails() {
@@ -458,7 +458,7 @@ void drawBridgePoles() {
     {
         glTranslatef(i + 6, 0, 0);
         drawCylinder(2, 2, i, 5, 1);
-     }
+    }
     glPopMatrix();
 
     glPushMatrix();
@@ -466,7 +466,7 @@ void drawBridgePoles() {
     for (int x = 3; x < 20; x++)
     {
         glTranslatef(x + 6, 0, 0);
-        drawCylinder(2, 2, x, 5, 1);  
+        drawCylinder(2, 2, x, 5, 1);
     }
     glPopMatrix();
 }
@@ -595,7 +595,7 @@ void bridge() {
 
 
     //Poles of the bridge---------------------------------------------------------------
-    
+
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
     glTranslatef(-300, 0, 0);
@@ -999,7 +999,7 @@ void makeCylinder(float height, float base) {
     GLUquadric* obj = gluNewQuadric();
     //gluQuadricDrawStyle(obj, GLU_LINE);
 
-    glColor3f(0.0f, 0.76, 0.0f); 
+    glColor3f(0.0f, 0.76, 0.0f);
     glPushMatrix();
     glRotatef(-90, 1.0, 0.0, 0.0);
     gluCylinder(obj, base, base - (0.2 * base), height, 20, 20);
@@ -1011,7 +1011,7 @@ void makeTree(GLfloat height, GLfloat base) {
     float angle;
 
     glTranslatef(0.0, height, 0.0);
-    makeCylinder(height, base); 
+    makeCylinder(height, base);
 
     height -= height * .2; base -= base * 0.3;
     for (int a = 0; a < 3; a++) {
@@ -1031,7 +1031,7 @@ void makeTree(GLfloat height, GLfloat base) {
 
 void tree() {
     glPushMatrix();
-    glTranslatef(0, 0, 50); 
+    glTranslatef(0, 0, 50);
     glCallList(makeaTree);
     glPopMatrix();
 
@@ -1047,7 +1047,7 @@ void trees() {
     for (int i = 0; i < 10; i++)
     {
         glPushMatrix();
-        glTranslatef(i*20, 0, 0);
+        glTranslatef(i * 20, 0, 0);
         tree();
         glPopMatrix();
     }
@@ -1139,12 +1139,12 @@ void moving_car1() {
 }
 
 void moving_car2() {
-    glTranslatef(100, 0, 38);
+    glTranslatef(250, 0, 38);
     glRotatef(0, 0.0f, 1.0f, 0.0f);
     glScalef(5, 5, 5);
     glTranslatef(moveX - 30 - possNut, 0, 0);
     drawCar2();
- }
+}
 
 void display() {
 
@@ -1157,7 +1157,7 @@ void display() {
     glRotatef(rotX, 1.0f, 0.0f, 0.0f);
     glRotatef(rotY, 0.0f, 1.0f, 0.0f);
     glRotatef(rotZ, 0.0f, 0.0f, 1.0f);
-    
+
     glPushMatrix();
     bridge();
     glPopMatrix();
@@ -1179,7 +1179,7 @@ void display() {
     glPopMatrix();
 
 
-    
+
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
     DrawGrid();
@@ -1193,7 +1193,7 @@ void display() {
 
     glutSwapBuffers();
 
-  
+
 
 
 }
