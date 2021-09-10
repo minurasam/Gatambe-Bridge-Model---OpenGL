@@ -631,8 +631,11 @@ void bridge() {
     allRails();
     glPopMatrix();
 
-
-    
+    glPushMatrix();
+    glTranslatef(-20, 30, 0);
+    glRotatef(45, 1.0f, 0.0f, 0.0f);
+    drawarc();
+    glPopMatrix();
 }
 
 void makeCylinder(float height, float base) {
