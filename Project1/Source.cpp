@@ -699,14 +699,6 @@ void bridge() {
     glPushMatrix();
     allRails();
     glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0, 2, 0);
-    glRotatef(95, 0.0f, 1.0f, 0.0f);
-    glRotatef(-45, 1.0f, 0.0f, 0.0f);
-    glRotatef(-180, 1.0f, 0.0f, 1.0f);
-    drawarc();
-    glPopMatrix();
 }
 
 void drawCar1() {
