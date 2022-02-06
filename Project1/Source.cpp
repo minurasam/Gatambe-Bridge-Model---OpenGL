@@ -192,54 +192,78 @@ void drawCube() {
             // BACK
     glBegin(GL_QUADS);
     glColor3f(0.4f, 0.3f, 0.5f);
+    glTexCoord2f(0.0, 0.0);
     glVertex3f(11 * x, y, z);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(11 * x, -y, z);
+    glTexCoord2f(1.0,1.0);
     glVertex3f(-x, -y, z);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(-x, y, z);
     glEnd();
 
     // FRONT
     glBegin(GL_QUADS);
     glColor3f(1, 0, 0);
+    glTexCoord2f(0.0, 0.0);
     glVertex3f(11 * x, y, -z);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(-x, y, -z);
+    glTexCoord2f(1.0, 1.0);
     glVertex3f(-x, -y, -z);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(11 * x, -y, -z);
     glEnd();
 
     // LEFT
     glBegin(GL_QUADS);
     glColor3f(0, 0, 1);
+    glTexCoord2f(0.0, 0.0);
     glVertex3f(-x, -y, -z);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(-x, y, -z);
+    glTexCoord2f( 1.0, 1.0);
     glVertex3f(-x, y, z);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(-x, -y, z);
     glEnd();
 
     //Right
     glBegin(GL_QUADS);
     glColor3f(1, 1, 0.5);
+    glTexCoord2f(0.0, 0.0);
     glVertex3f(11 * x, y, z);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(11 * x, -y, z);
+    glTexCoord2f(1.0, 1.0);
     glVertex3f(11 * x, -y, -z);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(11 * x, y, -z);
     glEnd();
 
     //Top
     glBegin(GL_QUADS);
     glColor3f(0.6, 0.0, 0.0);
+    glTexCoord2f(0.0, 0.0);
     glVertex3f(11 * x, y, -z);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(11 * x, y, z);
+    glTexCoord2f(1.0, 1.0);
     glVertex3f(-x, y, z);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(-x, y, -z);
     glEnd();
 
     //Bottom
     glBegin(GL_QUADS);
     glColor3f(0.4, 0.0, 0.4);
+    glTexCoord2f(0.0, 0.0);
     glVertex3f(11 * x, -y, z);
+    glTexCoord2f(1.0, 0.0);
     glVertex3f(11 * x, -y, -z);
+    glTexCoord2f(1.0, 1.0);
     glVertex3f(-x, -y, -z);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(-x, -y, z);
     glEnd();
 }
@@ -259,65 +283,6 @@ void DrawGrid() {
         glVertex3f(-ext, yGrid, line);
     }
     glEnd();
-}
-
-void drawarc()
-{
-
-    double equ[4];
-    double equ1[4];
-
-    equ[0] = 0;	//0.x
-    equ[1] = 0;	//0.y
-    equ[2] = -1;//-1.z
-    equ[3] = 53;//50
-
-    equ1[0] = -1;	//0.x
-    equ1[1] = 0;	//0.y
-    equ1[2] = 0;//-1.z
-    equ1[3] = 111;//52
-
-
-
-    glClipPlane(GL_CLIP_PLANE0, equ);
-    glClipPlane(GL_CLIP_PLANE1, equ1);
-
-
-    //now we enable the clip plane
-    glEnable(GL_CLIP_PLANE1); {
-        glPushMatrix(); {
-            glEnable(GL_CLIP_PLANE0); {
-                glColor3f(35.0f / 255.0f, 85.0f / 255.0f, 250.0f / 255.0f);	//blue
-                glRotatef(90, 1.0, 0.0, 0.0);
-                glTranslatef(115.0f, 55.0f, 0.0f);
-                glutSolidTorus(0.75, 52, 4, 1000);
-
-            }glDisable(GL_CLIP_PLANE0);
-
-        }glPopMatrix();
-
-
-    }glDisable(GL_CLIP_PLANE1);
-
-
-    //second
-
-
-    //now we enable the clip plane
-    glEnable(GL_CLIP_PLANE1); {
-        glPushMatrix(); {
-            glEnable(GL_CLIP_PLANE0); {
-                //glColor3f(0.2,0.3,0.8);	//blue
-
-                glRotatef(90, 1.0, 0.0, 0.0);
-                glTranslatef(265.0f, 200.0f, 0.0f);
-                glutSolidTorus(0.75, 250, 4, 1000);
-
-            }glDisable(GL_CLIP_PLANE0);
-        }glPopMatrix();
-    }glDisable(GL_CLIP_PLANE1);
-
-
 }
 
 void drawBridgeRoad() {
@@ -406,9 +371,14 @@ void drawCylinder(GLdouble base, GLdouble top, GLdouble height, GLdouble slices,
     glRotatef(-90, 1.0f, 0.0f, 0.0f);
     glColor3f(1, 1, 1);
     glTexCoord2f(0.0, 0.0);
+    glVertex3f(x, y, z);
     glTexCoord2f(1.0, 0.0);
+    glVertex3f(x + 1, y, z);
     glTexCoord2f(1.0, 1.0);
+    glVertex3f(x + 1, y, z + 1);
     glTexCoord2f(0.0, 1.0);
+    glVertex3f(x, y, z + 1);
+    glColor3f(1.0, 1.0, 1.0);
     gluCylinder(qobj, base, top, height, slices, stacks);
     glPopMatrix();
 
@@ -511,11 +481,14 @@ void rails() {
 }
 
 void drawBridgePoles() {
-    glPushMatrix();
+    glPushMatrix();    
     for (int i = 3; i < 20; i++)
     {
+        glEnable(GL_TEXTURE_2D);
         glTranslatef(i + 6, 0, 0);
+        glBindTexture(GL_TEXTURE_2D, tex);
         drawCylinder(2, 2, i, 5, 1);
+        glDisable(GL_TEXTURE_2D);
      }
     glPopMatrix();
 
@@ -523,9 +496,13 @@ void drawBridgePoles() {
     glTranslatef(0, 0, 20);
     for (int x = 3; x < 20; x++)
     {
+        glEnable(GL_TEXTURE_2D);
         glTranslatef(x + 6, 0, 0);
-        drawCylinder(2, 2, x, 5, 1);  
+        glBindTexture(GL_TEXTURE_2D, tex);
+        drawCylinder(2, 2, x, 5, 1); 
+        glDisable(GL_TEXTURE_2D);
     }
+   
     glPopMatrix();
 }
 
@@ -662,20 +639,14 @@ void bridge() {
     //Poles of the bridge---------------------------------------------------------------
     
     glPushMatrix();
-    glEnable(GL_TEXTURE_2D);
     glTranslatef(-300, 0, 0);
-    glBindTexture(GL_TEXTURE_2D, tex);
     drawBridgePoles();
-    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
     glPushMatrix();
-    glEnable(GL_TEXTURE_2D);
     glRotatef(180, 0.0f, 1.0f, 0.0f);
     glTranslatef(-300, 0, -20);
-    glBindTexture(GL_TEXTURE_2D, tex);
     drawBridgePoles();
-    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
     //bridge cube used------------------------------------------------------------
@@ -1192,7 +1163,7 @@ void moving_car1() {
     glTranslatef(0, 0, -200);
     glRotatef(90, 0.0f, 1.0f, 0.0f);
     glScalef(5, 5, 5);
-    //glTranslatef(moveZ - 30 - poss, 0, 0);
+    glTranslatef(moveZ - 30 - poss, 0, 0);
     drawCar1();
 }
 
@@ -1245,7 +1216,8 @@ void display() {
 
 
 
-    drawAxes();
+    //drawAxes();
+
     glPopMatrix();
 
 
